@@ -24,7 +24,7 @@ Grid.prototype.draw = function(ctx) {
 
 //
 // Produkte zu zeigen
-// Field Objekt um einzelnen Filed zu zeichnen 
+// Field Objekt um einzelnen Feld zu zeichnen 
 var Field = function(ctx, id, number_fields) {
     this.id = id - 1;
     this.num_fields = number_fields;
