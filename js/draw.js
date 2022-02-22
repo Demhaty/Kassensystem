@@ -1,5 +1,16 @@
 //
 
+
+
+
+
+const cvs = document.getElementById('canvas1');
+const ctx = cvs.getContext('2d');
+
+
+
+
+
 var Grid = function(ctx, num_fields) {
     this.width = ctx.canvas.width;
     this.height = ctx.canvas.height;
@@ -24,7 +35,7 @@ Grid.prototype.draw = function(ctx) {
 
 //
 // Produkte zu zeigen
-// Field Objekt um einzelnen Feld zu zeichnen 
+// Field Objekt um einzelnen Filed zu zeichnen 
 var Field = function(ctx, id, number_fields) {
     this.id = id - 1;
     this.num_fields = number_fields;
@@ -48,3 +59,9 @@ Field.prototype.getcoordinateFromId = function() {
         y: parseInt(this.id / this.num_fields)
     }
 }
+
+
+let field2 = new Field(ctx, 5, 4);
+field2.draw(ctx);
+let field3 = new Field(ctx, 6, 4);
+field3.draw(ctx);
