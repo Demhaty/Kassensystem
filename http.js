@@ -15,7 +15,8 @@ function data_tabel(query) {
         //let query = 'SELECT * FROM Kategorie ';
         let arr = [];
         db.all(query, (err, row) => {
-            res(row);console.log(row);
+            res(row);
+            console.log(row);
             arr.push(row);
             Promise.all(arr)
                 .then(results => {
@@ -26,6 +27,7 @@ function data_tabel(query) {
     });
 }
 //
+/*
 function req_method(req){
         if (req.method == 'POST') {
             let body = '';
@@ -42,7 +44,7 @@ function req_method(req){
         }
     
 }
-
+*/
 
 
 
@@ -54,14 +56,14 @@ const server = http.createServer((req, res) => {
     ////
     /// Daten => von Client zu Server
     ///
-    
-    
-    
+
+
+
     //let x =req_method(req);
     //console.log(req_method(req));
-    
-    
-    
+
+
+
     //
     //   Daten => von Server zu Client 
     if (req.url == '/getData') {
@@ -81,15 +83,47 @@ const server = http.createServer((req, res) => {
                 res.end();
             })
             .catch(err => console.error(err));
-            
 
 
+
+
+    } else if (req.method == 'POST' && req.url == "/setData") {
+        let body = '';
+        req.on('data', function(data) {
+            body += data;
+        });
+        req.on('end', function() {
+            var POST = [];
+            POST.push(JSON.parse(body));
+            console.log(POST);
+            console.log(POST[0].value);
+            //let str2 = JSON.stringify(POST);
+            //console.log(str2);
+
+            res.setHeader('Access-Control-Allow-Origin', '*'); // '*'=> Dömenen
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE, HEAD'); //Methods req
+            res.setHeader('Access-Control-Allow-Credentials', true);            
+            res.setHeader('Access-Control-Allow-Headers', '*'); //User Agent
+
+            // console.log(res.write(str2));
+            // res.end();
+            //
+            //
+            let arr2 = [];
+            arr2.push(data_tabel(`SELECT * FROM Produkt as p WHERE p.Kategorie_fk_id = (SELECT Kategorie_id FROM Kategorie as k WHERE k.Kategorie_name = "${POST[0].value}")`));
+            Promise.all(arr2)
+                .then(v => {
+                    let str = JSON.stringify(v[0]);
+                    res.write(str);
+                    res.end();
+                })
+                .catch(err => console.error(err));
+        });
 
     }
-    //else if(req.url == '/setdata'){
-        
-        
-   // }
+
+
+
     //
     // um HTML und Javascript Deiten auf Server hochzuladen
     else {
@@ -106,36 +140,15 @@ const server = http.createServer((req, res) => {
         });
 
     }
-    if (req.method == 'POST') {
-        let body = '';
-        req.on('data', function(data) {
-            body += data;
-        });
-        req.on('end', function() {
-            var POST = qs.parse(body);
-            console.log(POST);console.log(POST.value);
-             //xx=body;
-            //console.log(xx);
-            let arr2=[];
-            arr2.push(data_tabel(`SELECT * FROM Produkt as p WHERE p.Kategorie_fk_id = (SELECT Kategorie_id FROM Kategorie as k WHERE k.Kategorie_name = "${POST.value}")` ));
-            Promise.all(arr2)
-                .then(v => {
-                console.log(v[0]);
-                let str2 = "let data2 =" + JSON.stringify(v[0]);
-                console.log(str2);
-                res.write(POST);
-                res.end();
-                })
-                .catch(err => console.error(err));     
-             });
-    }
-
-    
-    
-    
 
 
-    
+
+
+
+
+
+
+
 });
 //
 
