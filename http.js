@@ -87,7 +87,19 @@ const server = http.createServer((req, res) => {
 
 
 
-    } else if (req.method == 'POST' && req.url == "/setData") {
+    }else if (req.method == 'POST' && req.url == "/setData2"){
+        let body = '';
+        req.on('data', function(data) {
+            body += data;
+        });
+        req.on('end', function() {
+            var POST2 = [];
+            POST2.push(JSON.parse(body));
+            console.log(POST2);
+            console.log(POST2[0].value);
+        });
+    } 
+    else if (req.method == 'POST' && req.url == "/setData") {
         let body = '';
         req.on('data', function(data) {
             body += data;
