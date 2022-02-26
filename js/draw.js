@@ -1,8 +1,10 @@
+
+
 //
-const cvs = document.getElementById('canvas1');
-const ctx = cvs.getContext('2d');
-const cvs4 = document.getElementById('canvas4');
-const ctx4 = cvs4.getContext('2d');
+let cvs = document.getElementById('canvas1');
+let ctx = cvs.getContext('2d');
+let cvs4 = document.getElementById('canvas4');
+let ctx4 = cvs4.getContext('2d');
 let cvs5 = document.getElementById('canvas5');
 let ctx5 = cvs5.getContext('2d');
 let cvs2 = document.getElementById('canvas2')
@@ -16,53 +18,6 @@ let str = [];
 let rechnung=[];
 
 
-var Grid = function(cvs, number_of_fields) {
-    this.cvs = cvs;
-    this.ctx = this.cvs.getContext('2d');
-    this.number_of_fields = number_of_fields;
-
-
-    this.field_width = this.cvs.width / number_of_fields;
-    this.field_height = this.cvs.height / number_of_fields;
-
-}
-Grid.prototype.drawGrid = function() {
-
-
-    this.ctx.clearRect(0, 0, this.cvs.width, this.cvs.height);
-    //this.ctx.fillStyle='#ffffff';
-    //this.ctx.fillRect( 0, 0, this.cvs.width, this.cvs.height);
-    this.ctx.beginPath();
-    this.ctx.lineWidth = 1;
-
-    for (let y = 0; y <= this.cvs.height; y += this.field_height) {
-        this.ctx.moveTo(0, y);
-        this.ctx.lineTo(this.cvs.width - this.field_width, y);
-    }
-
-    for (let x = 0; x <= this.cvs.width; x += this.field_width) {
-        this.ctx.moveTo(x, 0);
-        this.ctx.lineTo(x, this.cvs.height);
-    }
-
-    this.ctx.stroke();
-}
-
-
-Grid.prototype.drawFieldNumbers = function() {
-
-        for (let y = 0; y < this.cvs.height - this.field_height; y += this.field_height) {
-            for (let x = 0; x < this.cvs.width - this.field_width; x += this.field_width) {
-                let fieldnumber = ((parseInt(y / this.field_height) * this.number_of_fields) + parseInt(x / this.field_width));
-                //if(fieldnumber == )
-                let measure = this.ctx.measureText(fieldnumber);
-                let text_width = measure.width;
-                this.ctx.font = "20px Arial";
-                this.ctx.fontStyle = '#3e3e3e';
-                this.ctx.fillText(fieldnumber, x + (this.field_width / 2) - (text_width / 2), y + 35);
-            }
-        }
-    }
     //
     // Produkte zu zeigen
     // Field Objekt um einzelnen Filed zu zeichnen 
@@ -99,7 +54,7 @@ Field.prototype.getcoordinateFromId = function() {
 
 
 //
-console.log(data, data.length);
+//console.log(data, data.length);
 
 //
 
@@ -179,9 +134,7 @@ function mouseclick(evt) {
         } else if (arr_produkt[0].length != 0) {
             if (arr_produkt_gewalt.filter((v, i) => v.value.Produkt_name == arr_produkt[0][fieldnumber].Produkt_name).length == 0) { arr_produkt_gewalt.push({ Kategorie: Kategorie_text, value: arr_produkt[0][fieldnumber], anzahl: 1 }); } else {
                 arr_produkt_gewalt.filter((v) => v.value.Produkt_name == arr_produkt[0][fieldnumber].Produkt_name)[0].anzahl += 1;
-                // arr_produkt_gewalt.filter((v,i)=>v.value.Produkt_name = arr_produkt[0][fieldnumber]
-                //arr_produkt_gewalt.filter((v, i) => v.value.Produkt_name == arr_produkt[0][fieldnumber])
-            } //arr_produkt_gewalt.filter((v)=>v.value.Produkt_name == arr_produkt[0][fieldnumber])[0].anzahl+=1
+            }
             draw_canvas23(arr_produkt_gewalt);
 
         }
@@ -192,10 +145,6 @@ function mouseclick(evt) {
         draw_canvas(data, ctx, arr_filed, arr_produkt, arr_kategorie);
 
     }
-
-    
-    
-
 
 }
 
@@ -209,15 +158,15 @@ function mouseclick2(evt) {
     let ypos = parseInt(y / 75);
 
     let fieldnumber = ypos * 4 + xpos;
-    //console.log(fieldnumber);
+ 
     if (arr_number.filter((v) => (v.id) == fieldnumber).length > 0) {
        
         console.log(fieldnumber);
-         //arr_number.filter((v, i) => (v.id[1]) == fieldnumber).length > 0) {
+        
         document.title = xpos + ":" + ypos + ":" + fieldnumber;
         console.log(arr_number.filter((v) => (v.id == fieldnumber))[0]);
         str.push(arr_number.filter((v) => (v.id == fieldnumber))[0]);
-        /////// let arr_zeichen=[".","C","OK","Storno"];
+   
 
         if (str[str.length - 1].text == "C") { str = []; } else if (str[str.length - 1].text == "OK") { str.pop();draw_canvas5(str,true); } // Datenbank abfrage=====>>>>>>
         else if (str[str.length - 1].text == "Storno") {
@@ -231,48 +180,24 @@ function mouseclick2(evt) {
 
 
     }
-
-
-    ///
-    //
-    //
-    //draw_canvas5([{ text: 1 }, { text: 2 }, { text: 3 }]);
-
-
 }
-
 //
 //
 function req_server(Gategorie,xx) {
-    return new Promise((res, rej) => {
-        //var dataX = null;
+    return new Promise((res, rej) => {       
         const client = new XMLHttpRequest();
-
-        client.onload = function() {
-            //console.log("client.onload")
-            if (client.readyState === client.DONE) {
-                //console.log("client.DONE")
-                if (client.status === 200) {
-                    //console.log("status == 200")
-                    //console.log(client.response);
-                    //console.log(client.responseText);
+        client.onload = function() {         
+            if (client.readyState === client.DONE) {        
+                if (client.status === 200) {             
                     var dataX = JSON.parse(client.responseText);
-                    //console.log(dataX);
-
-                    res(dataX);
-                    //arr_produkt = dataX;
-                    //return dataX;
+                    res(dataX);                 
                 }
             }
         };
-
-
         client.open('POST', 'http://127.0.0.1:8001/'+xx, true);
         client.responseType = 'text';
-
-
         client.send(JSON.stringify({
-            value: Gategorie
+            value : Gategorie
         }));
     });
 }
@@ -281,17 +206,10 @@ cvs.onmousedown = mouseclick;
 cvs4.onmousedown = mouseclick2;
 
 //
-//  canvas2 
+//  canvas2 ,3
 //
-//  redundant code 
-//  ==> ||
-
 function draw_canvas23(arr_produkte) {
     let sum = 0;
-    /*
-    let cvs2 = document.getElementById('canvas2')
-    let ctx2 = cvs2.getContext('2d');
-    */
     ctx2.clearRect(0, 0, cvs2.width, cvs2.height);
     for (let i = 0, y = 20, x = 10; i < arr_produkte.length; i++, y += 50) {
         sum += arr_produkte[i].value.preis*arr_produkte[i].anzahl;
@@ -301,7 +219,6 @@ function draw_canvas23(arr_produkte) {
         ctx2.font = "12px Arial";
         ctx2.fillStyle = "#000000";
         ctx2.fillText(`${arr_produkte[i].anzahl}X  Produkt: ${arr_produkte[i].value.Produkt_name}:  ${arr_produkte[i].value.preis}$`, x + 40, y + 20);
-
     }
     let cvs3 = document.getElementById('canvas3')
     let ctx3 = cvs3.getContext('2d');
@@ -309,20 +226,12 @@ function draw_canvas23(arr_produkte) {
     ctx3.font = "24px Arial";
     ctx3.fillStyle = "#ffffff";
     ctx3.fillText(`Summe : ${sum}$`, cvs3.width / 3, cvs3.height / 2);
-
 }
-
 //
 //  canvas 4
 //
 function draw_canvas4() {
     arr_number = [];
-    //let cvs4 = document.getElementById('canvas4');
-    //let ctx4 = cvs4.getContext('2d');
-    //let number = new Field(ctx4,1,4,1);number.draw(ctx4);
-    //for(let i=0;i<=9;i++){
-    //let number = new Field(ctx4,1,4,9);number.draw(ctx4);
-    //}
     let arr = [
         [7, 8, 9],
         [4, 5, 6],
@@ -346,22 +255,13 @@ function draw_canvas4() {
     // arr[OK:3,7 , STorno:11,15]
     // ok,storno: width:100 , height:150
     //
-    /*
-    arr_number.push({ id: [3, 7], number_fields: 4, width: 100, height: 75 * 2, text: 'OK' }); //index 12
-    //arr_number.push({ id: [3, 7], number_fields: 4, width: 100, height: 75 * 2, text: 'OK' });
-    arr_number.push({ id: [11, 15], number_fields: 4, width: 100, height: 75 * 2, text: 'Storno' }); //index 13
-    */
-    //
     //
     //
     arr_number.push({ id: 3, number_fields: 4, width: 100, height: 75 * 2, text: 'OK' });
     arr_number.push({ id: 7, number_fields: 4, width: 100, height: 75 * 2, text: 'OK' });
     arr_number.push({ id: 11, number_fields: 4, width: 100, height: 75 * 2, text: 'Storno' });
     arr_number.push({ id: 15, number_fields: 4, width: 100, height: 75 * 2, text: 'Storno' });
-
     arr_number.sort((a, b) => a.id - b.id);
-
-
     ctx4.fillStyle = "#3e3e3e";
     ctx4.fillRect(cvs4.width - arr_number[0].width, 0, cvs4.width, (cvs4.height - arr_filed[0].height) - 5);
     ctx4.fillRect(cvs4.width - arr_number[0].width, arr_number[12].height * 2, cvs4.width, (cvs4.height - arr_filed[0].height));
@@ -371,28 +271,13 @@ function draw_canvas4() {
     ctx4.fillStyle = "#FF0000";
     ctx4.fillText(`Storno`, cvs4.width - arr_number[13].width - 5 + arr_number[13].width / 10, cvs4.height - (arr_number[13].height));
 
-
-
-
-
 }
 draw_canvas4();
 //
-
-
 function draw_canvas5(arr,count) {
-    /*
-    let cvs5 = document.getElementById('canvas5');
-    let ctx5 = cvs5.getContext('2d');
-    */
-
-    let x = 75;
-    //ctx5.clearRect(0, 0, cvs5.width, cvs5.height);
-    
+    let x = 75;  
     ctx5.fillStyle = "#3e3e3e";
     ctx5.fillRect(0, cvs5.height - x, cvs5.width, cvs5.height);
-    
-    
     let strr = '';
     if (arr.length == 0) { strr = 0; } else
             strr = '';
@@ -401,34 +286,33 @@ function draw_canvas5(arr,count) {
         });
      if(count){
         //
-         console.log('hiiiiiiii');
+        
         let sum =0;
         arr_produkt_gewalt.forEach((v)=>{
             sum += v.value.preis * v.anzahl;
-            //rechnung.push(v);
-        });console.log(sum,strr,'gesamt : ',(strr-0) - sum);
-       // var time = setTimeout(()=>{   
-            if((strr-0) >= sum){
-            rechnung.push({Produkt : arr_produkt_gewalt ,Summe : sum , eingegebene_Geld : (strr-0)});
-            console.log(rechnung);let zz=req_server(rechnung[rechnung.length-1],'setData2');
-            //ctx5.clearRect(0, 0, cvs5.width, cvs5.height-x);
+        });console.log(sum,strr,'gesamt : ',(strr-0) - sum);  
+    
+            if(((strr-0) >= sum)&&  sum !=0){
+                let date = new Date();date=date+"";date=date.slice(0,24);
+                rechnung.push({Berechnung_fk_id:rechnung.length, Produkt : arr_produkt_gewalt ,Summe : sum , eingegebene_Geld : (strr-0),datum:date});
+            
+            console.log(rechnung); zz=req_server(rechnung[rechnung.length-1],'setData2');
             
             let txt = `eingegebene Geld : ${strr}$\nSumme : ${sum}$\nZuruckgabe: ${(strr-0)-sum}$`;
             let lines = txt.split('\n');
-            //ctx5.fillStyle = "#ffffff";
             ctx5.clearRect(0, 0, cvs5.width, cvs5.height-x);
             for(let i=0,x=10,y=30;i<lines.length;i++,y+=30){
-                //ctx5.clearRect(0, 0, cvs5.width, cvs5.height-x);
                 ctx5.fillStyle = "#3e3e3e";
                 ctx5.font = '20px Arial';
                ctx5.fillText(lines[i],x,y);
-            }setTimeout(() => {  ctx5.clearRect(0, 0, cvs5.width, cvs5.height-x);ctx2.clearRect(0, 0, cvs2.width, cvs2.height); }, 3000);
+            }setTimeout(() => {  ctx5.clearRect(0, 0, cvs5.width, cvs5.height-x);ctx2.clearRect(0, 0, cvs2.width, cvs2.height); }, 5000);
             str=[];strr='';arr_produkt_gewalt=[];
-            }else {alert("eingegebene Geld reicht nicht,um die Produkte zu kaufen -_-");}//},500);// 
+            }else if(sum==0){alert(" ERROR  -_-");}
+            else {alert("eingegebene Geld reicht nicht,um die Produkte zu kaufen -_-");}
         }
     ctx5.fillStyle = "#ffffff";
     ctx5.font = '30px Arial';
     ctx5.fillText(strr, x / 2, cvs5.height - x / 4);
 }
 draw_canvas5([],false);
-//draw_canvas5([{ text: 1 }, { text: 2 }, { text: 3 }]);
+ 
